@@ -22,7 +22,7 @@ public class NiklavsMeiers2048 extends AbstractPlayer {
         pause();
         // Get available moves
         List<MOVE> moves = game.getMoves();
-        ScoreEvaluator be = new ScoreEvaluator();
+        BonusEvaluator be = new BonusEvaluator();
         for(MOVE move : moves){
             State tempState = game.copy();
             tempState.move(move);
