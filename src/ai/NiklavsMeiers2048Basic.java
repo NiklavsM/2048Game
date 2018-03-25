@@ -9,12 +9,13 @@ import eval.ScoreEvaluator;
 import model.AbstractState.MOVE;
 import model.State;
 
-public class NiklavsMeiers2048 extends AbstractPlayer {
+public class NiklavsMeiers2048Basic extends AbstractPlayer {
 
     private Random rng = new Random();
 
     @Override
     public MOVE getMove(State game) {
+        System.out.println(game);
         double highScore = 0;
         double currentScore;
         MOVE bestMove = null;
