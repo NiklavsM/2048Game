@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class NiklavsMeiers2048Average extends AbstractPlayer {
+public class NiklavsMeiers2048AaverageEnhanced extends AbstractPlayer {
 
     private Random rng = new Random();
 
@@ -25,18 +25,16 @@ public class NiklavsMeiers2048Average extends AbstractPlayer {
             children.add(new Node(tempState, move));
         }
         double maxScore = 0;
-        Node bestChild;
+        Node bestChild = null;
         double childScore;
-        bestChild = children.get(0);
         for (Node child : children) {
-            childScore = child.getAverage(4);
+            childScore = child.getScore(5);
             if (maxScore <= childScore) {
                 maxScore = childScore;
                 bestChild = child;
             }
 
         }
-
         return bestChild.getMove();
     }
 
@@ -58,25 +56,24 @@ public class NiklavsMeiers2048Average extends AbstractPlayer {
             return state;
         }
 
-        public double getAverage(int depth) {
+        public double getScore(int depth) {
             BonusEvaluator be = new BonusEvaluator();
-            double score = 0;
-            if(depth > 0) {
-                List<Node> children = new LinkedList<>();
-                List<MOVE> moves = state.getMoves();
-                for (MOVE move : moves) {
+            if (depth > 0) {
+                Node bestChild = null;
+                double bestScore = 0;
+                for (MOVE move : state.getMoves()) {
                     State tempState = state.copy();
                     tempState.move(move);
-                    children.add(new Node(tempState, move));
+                    Node child = new Node(tempState, move);
+                    double childScore = child.getScore(depth - 1);
+                    if (bestScore < childScore) {
+                        bestChild = child;
+                        bestScore = childScore;
+                    }
                 }
-                for(Node child : children){
-                    score += child.getAverage(depth-1);
-                }
-                if(children.isEmpty()){
-                    return be.evaluate(state);
-                }
-                return score/children.size();
-            }else{
+                if(bestChild == null) return 1;
+                return bestScore;
+            } else {
                 return be.evaluate(state);
             }
         }
