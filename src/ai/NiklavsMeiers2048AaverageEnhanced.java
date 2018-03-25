@@ -24,17 +24,18 @@ public class NiklavsMeiers2048AaverageEnhanced extends AbstractPlayer {
             tempState.move(move);
             children.add(new Node(tempState, move));
         }
-        double maxScore = 0;
-        Node bestChild = null;
+        double maxScore = Double.MIN_VALUE;
+        Node bestChild = children.get(0);
         double childScore;
         for (Node child : children) {
-            childScore = child.getScore(5);
+            childScore = child.getScore(4);
             if (maxScore <= childScore) {
                 maxScore = childScore;
                 bestChild = child;
             }
 
         }
+
         return bestChild.getMove();
     }
 
@@ -65,13 +66,16 @@ public class NiklavsMeiers2048AaverageEnhanced extends AbstractPlayer {
                     State tempState = state.copy();
                     tempState.move(move);
                     Node child = new Node(tempState, move);
-                    double childScore = child.getScore(depth - 1);
-                    if (bestScore < childScore) {
+                    double childScore = 0;
+                    for (int i = 0; i < 3; i++) {
+                        childScore += child.getScore(depth - 1);
+                    }
+                    if (bestScore < childScore/3) {
                         bestChild = child;
-                        bestScore = childScore;
+                        bestScore = childScore/3;
                     }
                 }
-                if(bestChild == null) return 1;
+                if (bestChild == null) return -100000;
                 return bestScore;
             } else {
                 return be.evaluate(state);

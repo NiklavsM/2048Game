@@ -29,7 +29,7 @@ public class NiklavsMeiers2048Average extends AbstractPlayer {
         double childScore;
         bestChild = children.get(0);
         for (Node child : children) {
-            childScore = child.getAverage(4);
+            childScore = child.getAverage(3);
             if (maxScore <= childScore) {
                 maxScore = childScore;
                 bestChild = child;
@@ -60,23 +60,22 @@ public class NiklavsMeiers2048Average extends AbstractPlayer {
 
         public double getAverage(int depth) {
             BonusEvaluator be = new BonusEvaluator();
-            double score = 0;
-            if(depth > 0) {
-                List<Node> children = new LinkedList<>();
+            double score = 1;
+            if (depth > 0) {
                 List<MOVE> moves = state.getMoves();
+                int numberOfChildren = 0;
                 for (MOVE move : moves) {
                     State tempState = state.copy();
                     tempState.move(move);
-                    children.add(new Node(tempState, move));
+                    Node child = new Node(tempState, move);
+                    for (int i = 0; i < 3; i++) {
+                        score += child.getAverage(depth - 1);
+                    }
+                    numberOfChildren++;
                 }
-                for(Node child : children){
-                    score += child.getAverage(depth-1);
-                }
-                if(children.isEmpty()){
-                    return be.evaluate(state);
-                }
-                return score/children.size();
-            }else{
+                if (numberOfChildren == 0) return -100;
+                return score / numberOfChildren;
+            } else {
                 return be.evaluate(state);
             }
         }
