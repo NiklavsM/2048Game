@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
+import ai.NiklavsMeiers2048aDepthLimited;
 import ai.Player;
 import ai.RandomAI;
 import model.AbstractState.MOVE;
@@ -146,7 +147,7 @@ public class Statistics {
 	}
 
 	public static void main(String[] args) {
-		Statistics s = new Statistics(10, () -> new NiklavsMeiers2048aDepthLimited());
+		Statistics s = new Statistics(5, () -> new NiklavsMeiers2048aDepthLimited());
 		s.begin();
 		System.out.println(s);
 		// FileWriter results = null;

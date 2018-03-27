@@ -12,7 +12,7 @@ public class NiklavsMeiers2048aDepthLimited extends AbstractPlayer {
 
     @Override
     public MOVE getMove(State game) {
-        int iterations = 100;
+        int iterations = 200;
         List<Node> children = new LinkedList<>();
         Map<MOVE, Double> moveScores = new HashMap<>();
         // Delay for the view
@@ -25,9 +25,9 @@ public class NiklavsMeiers2048aDepthLimited extends AbstractPlayer {
                 tempState.move(move);
                 Node child = new Node(tempState, move);
                 if (moveScores.containsKey(move)) {
-                    moveScores.put(move, (moveScores.get(move) + child.getScore(10)));
+                    moveScores.put(move, (moveScores.get(move) + child.getScore()));
                 } else {
-                    moveScores.put(move, child.getScore(10));
+                    moveScores.put(move, child.getScore());
                 }
             }
         }
@@ -62,11 +62,12 @@ public class NiklavsMeiers2048aDepthLimited extends AbstractPlayer {
             return state;
         }
 
-        public double rollout(State state, int depth) {
+        public double rollout(State state) {
             BonusEvaluator be = new BonusEvaluator();
             Random rng = new Random();
             State stateToRoll = state.copy();
-            for (int i = 0; i < depth; i++) {
+            MOVE bestMove;
+            for (int i = 0; i < 10; i++) {
                 List<MOVE> moves = stateToRoll.getMoves();
                 // Pick a move at random
                 if (moves.isEmpty()) {
@@ -74,20 +75,16 @@ public class NiklavsMeiers2048aDepthLimited extends AbstractPlayer {
                 }
                 stateToRoll.move(moves.get(rng.nextInt(moves.size())));
             }
-
-
             return be.evaluate(stateToRoll);
         }
 
-        public double getScore(int depth) {
+        public double getScore() {
                 double bestScore = 0;
-
                 for (MOVE move : state.getMoves()) {
                     State tempState = state.copy();
                     double childScore;
                     tempState.move(move);
-                    Node child = new Node(tempState, move);
-                    childScore = child.rollout(tempState, depth);//scould calculate average for best 2 maybe
+                    childScore = rollout(tempState);
                     if (bestScore < childScore) {
                         bestScore = childScore;
                     }
