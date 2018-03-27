@@ -71,7 +71,7 @@ public abstract class AbstractState implements State {
 	public State[] nextFirstHalfMoveStates() {
 		State[] children = new State[4];
 		for (MOVE move : MOVE.values()) {
-			move(move);
+			halfMove(move);
 			children[move.ordinal()] = new BinaryState(toLong(), score);
 			if (getMoves().contains(move)) {
 				undo();

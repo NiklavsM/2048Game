@@ -32,7 +32,7 @@ public class NiklavsMeiers2048MCT extends AbstractPlayer {
         Node rootNode = new Node(null, state, null);
         rootNode.generateChildren();
 
-        while (rootNode.timesVisited < 10000) {
+        while (rootNode.timesVisited < 1000) {
             double maxUCB1 = 0;
             Node nodeToGo = null;
             for (Node child : rootNode.getChildren()) {
@@ -98,24 +98,24 @@ public class NiklavsMeiers2048MCT extends AbstractPlayer {
             int i = 0;
             BonusEvaluator be = new BonusEvaluator();
             State tempState = state.copy();
-            while (i < 10) {
+            while (i < 4) {
                 i++;
                 List<MOVE> moves = tempState.getMoves();
                 if (moves.isEmpty()) {
                     break;
                 }
-//                double bestScore = 0;
-//                MOVE bestMove = null;
-//                for (MOVE move : moves) {
-//                    State tempTempState = tempState.copy();
-//                    tempTempState.move(move);
-//                    double tempTempStateScore = be.evaluate(tempTempState);
-//                    if (bestScore < tempTempStateScore) {
-//                        bestScore = tempTempStateScore;
-//                        bestMove = move;
-//                    }
-//                }
-                tempState.move(moves.get(0));
+                double bestScore = 0;
+                MOVE bestMove = null;
+                for (MOVE move : moves) {
+                    State tempTempState = tempState.copy();
+                    tempTempState.move(move);
+                    double tempTempStateScore = be.evaluate(tempTempState);
+                    if (bestScore < tempTempStateScore) {
+                        bestScore = tempTempStateScore;
+                        bestMove = move;
+                    }
+                }
+                tempState.move(bestMove);
 
             }
 

@@ -146,7 +146,7 @@ public class Statistics {
 	}
 
 	public static void main(String[] args) {
-		Statistics s = new Statistics(100, () -> new RandomAI());
+		Statistics s = new Statistics(10, () -> new NiklavsMeiers2048aDepthLimited());
 		s.begin();
 		System.out.println(s);
 		// FileWriter results = null;
