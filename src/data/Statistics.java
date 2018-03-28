@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
+import ai.NiklavsMeiers2048Average;
 import ai.NiklavsMeiers2048aDepthLimited;
 import ai.Player;
 import ai.RandomAI;

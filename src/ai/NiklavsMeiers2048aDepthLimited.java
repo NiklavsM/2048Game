@@ -10,7 +10,8 @@ public class NiklavsMeiers2048aDepthLimited extends AbstractPlayer {
 
     @Override
     public MOVE getMove(State game) {
-        int iterations = 300;
+        System.out.println(game.getScore());
+        int iterations = 100;
         Map<MOVE, Double> moveScores = new HashMap<>();
         // Delay for the view
         pause();
@@ -57,7 +58,7 @@ public class NiklavsMeiers2048aDepthLimited extends AbstractPlayer {
             BonusEvaluator be = new BonusEvaluator();
             Random rng = new Random();
             State stateToRoll = state.copy();
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 7; i++) {
                 List<MOVE> moves = stateToRoll.getMoves();
                 if (moves.isEmpty()) {
                     return be.evaluate(stateToRoll);
@@ -68,26 +69,49 @@ public class NiklavsMeiers2048aDepthLimited extends AbstractPlayer {
         }
 
         public double getScore() {
-                double bestScore = 0;
-                for (MOVE move : state.getMoves()) {
+            int iterations = 10;
+            Map<MOVE, Double> moveScores = new HashMap<>();
+            List<MOVE> moves = state.getMoves();
+            for (int i = 0; i < iterations; i++) {
+                for (MOVE move : moves) {
                     State tempState = state.copy();
                     tempState.move(move);
-                    double childScore = rollout(tempState);
-                    if (bestScore < childScore) {
-                        bestScore = childScore;
+                    if (moveScores.containsKey(move)) {
+                        moveScores.put(move, (moveScores.get(move) + rollout(tempState)));
+                    } else {
+                        moveScores.put(move, rollout(tempState));
                     }
                 }
-                return bestScore;// try average?
             }
-        }
-
-        @Override
-        public int studentID() {
-            return 201546210;
-        }
-
-        @Override
-        public String studentName() {
-            return "Niklavs Meiers";
+            double bestScore = 0;
+            for (MOVE move : moveScores.keySet()) {
+                double moveScore = moveScores.get(move);
+                if (bestScore < moveScore) {
+                    bestScore = moveScore;
+                }
+            }
+            return bestScore;
         }
     }
+
+    @Override
+    public int studentID() {
+        return 201546210;
+    }
+
+    @Override
+    public String studentName() {
+        return "Niklavs Meiers";
+    }
+}
+//    public double getScore() {
+//        double score = 0;
+//        List<MOVE> moves = state.getMoves();
+//        for (MOVE move : moves) {
+//            State tempState = state.copy();
+//            tempState.move(move);
+//            score += rollout(tempState);
+//
+//        }
+//        return score / moves.size();// try average?
+//    }
